@@ -309,7 +309,7 @@ NSString *mimeTypeForExtension(NSString *ext)
 - (void)loginDidSuccess:(LFHTTPRequest *)request
 {
 	NSString *s = [[[NSString alloc] initWithData:[request receivedData] encoding:NSUTF8StringEncoding] autorelease];
-	NSDictionary *result = [NSDictionary dictionaryWithJSONString:s];
+	NSDictionary *result = [s JSONValue];
 	NSDictionary *sessionInfo = [request sessionInfo];
 
 	if ([result valueForKey:@"error_text"]) {
@@ -904,7 +904,7 @@ NSString *mimeTypeForExtension(NSString *ext)
 			[self httpRequest:request didFailWithError:@"Failed to fetch contents. (1)"]; return;
 		}
 
-		NSDictionary *result = [NSDictionary dictionaryWithJSONString:s];
+		NSDictionary *result = [s JSONValue];
 
 		if (!result) {
 			NSLog(@"%@", s);

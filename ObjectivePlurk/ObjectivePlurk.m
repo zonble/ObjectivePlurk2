@@ -48,6 +48,7 @@ static ObjectivePlurk *sharedInstance;
 
 - (void)dealloc
 {
+	[JSONParser release];
 	_request.delegate = nil;
 	[_request cancelWithoutDelegateMessage];
 	[_request release];
@@ -67,6 +68,7 @@ static ObjectivePlurk *sharedInstance;
 {
 	self = [super init];
 	if (self != nil) {
+		JSONParser = [[SBJSON alloc] init];
 		_request = [[LFHTTPRequest alloc] init];
 		_request.delegate = self;
 		_queue = [[NSMutableArray alloc] init];
@@ -415,19 +417,19 @@ static ObjectivePlurk *sharedInstance;
 
 - (void)muteMessagesWithMessageIdentifiers:(NSArray *)identifiers delegate:(id)delegate userInfo:(NSDictionary *)userInfo
 {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[identifiers jsonStringValue], @"ids", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[identifiers JSONRepresentation], @"ids", nil];
 	[self addRequestWithAction:OPMuteMessagesAction arguments:args delegate:delegate userInfo:userInfo];
 }
 
 - (void)unmuteMessagesWithMessageIdentifiers:(NSArray *)identifiers delegate:(id)delegate userInfo:(NSDictionary *)userInfo
 {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[identifiers jsonStringValue], @"ids", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[identifiers JSONRepresentation], @"ids", nil];
 	[self addRequestWithAction:OPUnmuteMessagesAction arguments:args delegate:delegate userInfo:userInfo];
 }
 
 - (void)markMessagesAsReadWithMessageIdentifiers:(NSArray *)identifiers delegate:(id)delegate userInfo:(NSDictionary *)userInfo
 {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[identifiers jsonStringValue], @"ids", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[identifiers JSONRepresentation], @"ids", nil];
 	[self addRequestWithAction:OPMarkMessageAsReadAction arguments:args delegate:delegate userInfo:userInfo];
 }
 
@@ -435,7 +437,7 @@ static ObjectivePlurk *sharedInstance;
 {
 	NSString *limitString = @"";
 	if ([users count]) {
-		limitString = [users jsonStringValue];
+		limitString = [users JSONRepresentation];
 	}
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:content, @"content", qualifier, @"qualifier", [[NSNumber numberWithInt:canComment] stringValue], @"no_comments", lang, @"lang", limitString, @"limited_to", nil];
 	[self addRequestWithAction:OPAddMessageAction arguments:args delegate:delegate userInfo:userInfo];

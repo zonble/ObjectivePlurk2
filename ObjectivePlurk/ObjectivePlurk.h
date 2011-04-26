@@ -2,7 +2,7 @@
 // ObjectivePlurk.h
 // ObjectivePlurk
 //
-// Copyright (c) 2009 Weizhong Yang (http://zonble.net)
+// Copyright (c) 2009-2011 Weizhong Yang (http://zonble.net)
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -30,8 +30,7 @@
 
 #import <Foundation/Foundation.h>
 #import "LFWebAPIKit.h"
-#import "NSArray+BSJSONAdditions.h"
-#import "NSDictionary+BSJSONAdditions.h"
+#import "JSON.h"
 
 @class ObjectivePlurk;
 
@@ -319,12 +318,13 @@ extern NSString *const OPRemoveUserFromCliqueAction;
 	NSDateFormatter *_dateFormatter;
 	NSDate *_expirationDate;
 	NSDictionary *_receivedHeader;
+	
+	
+	SBJSON *JSONParser;
 }
 
 + (ObjectivePlurk *)sharedInstance;
 
-//- (NSArray *)qualifiers;
-//- (NSArray *)langCodes;
 - (NSString *)langCodeFromLocalIdentifier:(NSString *)locale;
 
 - (void)cancelAllRequest;
