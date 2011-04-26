@@ -24,18 +24,19 @@
 #pragma mark -
 #pragma mark Application lifecycle
 
-- (void)applicationDidFinishLaunching:(UIApplication *)application
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 	[ObjectivePlurk sharedInstance].APIKey = API_KEY;
 	
-	window = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+	window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 	RootViewController *rootController = [[[RootViewController alloc] initWithStyle:UITableViewStylePlain] autorelease];
 	navigationController = [[UINavigationController alloc] initWithRootViewController:rootController];
-	[window addSubview:[navigationController view]];
+	window.rootViewController = navigationController;
     [window makeKeyAndVisible];
 	
 	rootController = [navigationController.viewControllers objectAtIndex:0];
 	[rootController login:nil];
+	return YES;
 }
 
 

@@ -13,7 +13,13 @@
 - (void)removeOutletsAndControls_LoginTableViewController
 {
 	[loginNameField release];
+	loginNameField = nil;
 	[passwordField release];
+	passwordField = nil;
+	[footerView release];
+	footerView = nil;
+	[loginButton release];
+	loginButton = nil;
 }
 
 - (void)dealloc 
@@ -32,17 +38,22 @@
 
 - (void)viewDidLoad 
 {
-    [super viewDidLoad];
+	UITableView *aTableView = [[UITableView alloc] initWithFrame:[UIScreen mainScreen].bounds style:UITableViewStyleGrouped];
+	aTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	aTableView.dataSource = self;
+	aTableView.delegate = self;
+	self.tableView = [aTableView autorelease];
+	
 	self.title = @"Login";
 	self.tableView.scrollEnabled = NO;
-	loginNameField = [[UITextField alloc] initWithFrame:CGRectMake(120, 12, 180, 30)];
+	loginNameField = [[UITextField alloc] initWithFrame:CGRectMake(120.0, 12.0, 180.0, 30.0)];
 	loginNameField.autocorrectionType = UITextAutocorrectionTypeNo;
 	loginNameField.autocapitalizationType = UITextAutocapitalizationTypeNone;	
 	loginNameField.placeholder = @"Your Login Name";
 	loginNameField.returnKeyType = UIReturnKeyNext;
 	loginNameField.delegate = self;
 	loginNameField.textColor = [UIColor blueColor];
-	passwordField = [[UITextField alloc] initWithFrame:CGRectMake(120, 12, 180, 30)];
+	passwordField = [[UITextField alloc] initWithFrame:CGRectMake(120.0, 12.0, 180.0, 30.0)];
 	passwordField.autocorrectionType = UITextAutocorrectionTypeNo;
 	passwordField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 	passwordField.secureTextEntry = YES;
@@ -51,13 +62,18 @@
 	passwordField.delegate = self;
 	passwordField.textColor = [UIColor blueColor];
 	
-	loginButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-	loginButton.frame = CGRectMake(20, 20, 280, 40);
+	loginButton = [[UIButton buttonWithType:UIButtonTypeRoundedRect] retain];
+	loginButton.frame = CGRectMake(20.0, 20.0, 280.0, 40.0);
 	[loginButton setTitle:@"Login" forState:UIControlStateNormal];
 	[loginButton setTitle:@"Login" forState:UIControlStateHighlighted];
 	[loginButton setTitle:@"Login" forState:UIControlStateDisabled];
 	[loginButton addTarget:self action:@selector(login:) forControlEvents:UIControlEventTouchUpInside];
-	self.tableView.tableFooterView = loginButton;
+
+	footerView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 80.0)];
+	footerView.backgroundColor = [UIColor clearColor];
+	[footerView addSubview:loginButton];
+	
+	self.tableView.tableFooterView = footerView;
 	
 	UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
 	self.navigationItem.rightBarButtonItem = cancelItem;

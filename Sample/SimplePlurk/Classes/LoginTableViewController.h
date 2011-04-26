@@ -21,6 +21,7 @@
 	UITextField *loginNameField;
 	UITextField *passwordField;
 	UIButton *loginButton;
+	UIView *footerView;
 }
 
 - (IBAction)login:(id)sender;
