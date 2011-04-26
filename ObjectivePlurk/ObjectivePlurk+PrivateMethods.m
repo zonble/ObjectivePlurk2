@@ -2,7 +2,7 @@
 // ObjectivePlurk+PrivateMethods.m
 // ObjectivePlurk
 // 
-// Copyright (c) 2009 Weizhong Yang (http://zonble.net)
+// Copyright (c) 2009-2011 Weizhong Yang (http://zonble.net)
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -65,8 +65,8 @@ NSString *const OPRetriveResponsesAction = @"/API/Responses/get";
 NSString *const OPAddResponsesAction = @"/API/Responses/responseAdd";
 NSString *const OPDeleteResponsesAction = @"/API/Responses/responseDelete";
 
-NSString *const OPRetrieveMyProfileAction = @"/API/Profile/getOwnProfile";
-NSString *const OPRetrievePublicProfileAction = @"/API/Profile/getPublicProfile";
+NSString *const OPFetchMyProfileAction = @"/API/Profile/getOwnProfile";
+NSString *const OPFetchPublicProfileAction = @"/API/Profile/getPublicProfile";
 
 NSString *const OPRetriveFriendAction = @"/API/FriendsFans/getFriendsByOffset";
 NSString *const OPRetriveFansAction = @"/API/FriendsFans/getFansByOffset";
@@ -75,7 +75,7 @@ NSString *const OPBecomeFriendAction = @"/API/FriendsFans/becomeFriend";
 NSString *const OPRemoveFriendshipAction = @"/API/FriendsFans/becomeFriend";
 NSString *const OPBecomeFanAction = @"/API/FriendsFans/becomeFan";
 NSString *const OPSetFollowingAction = @"/API/FriendsFans/setFollowing";
-NSString *const OPRetrieveFriendsCompletionListAction = @"/API/FriendsFans/getCompletion";
+NSString *const OPFetchFriendsCompletionListAction = @"/API/FriendsFans/getCompletion";
 
 NSString *const OPRetriveActiveAlertsAction = @"/API/Alerts/getActive";
 NSString *const OPRetriveHistoryAction = @"/API/Alerts/getHistory";
@@ -89,15 +89,15 @@ NSString *const OPRemoveNotificationAction = @"/API/Alerts/removeNotification";
 NSString *const OPSearchMessagesAction = @"/API/PlurkSearch/search";
 NSString *const OPSearchUsersAction = @"/API/UserSearch/search";
 
-NSString *const OPRetrieveEmoticonsAction = @"/API/Emoticons/get";
+NSString *const OPFetchEmoticonsAction = @"/API/Emoticons/get";
 
-NSString *const OPRetrieveBlockedUsersAction = @"/API/Blocks/get";
+NSString *const OPFetchBlockedUsersAction = @"/API/Blocks/get";
 NSString *const OPBlockuUserAction = @"/API/Blocks/block";
 NSString *const OPUnblockuUserAction = @"/API/Blocks/unblock";
 
-NSString *const OPRetrieveCliquesAction = @"/API/Cliques/get_cliques";
+NSString *const OPFetchCliquesAction = @"/API/Cliques/get_cliques";
 NSString *const OPCreateNewCliqueAction = @"/API/Cliques/create_clique";
-NSString *const OPRetrieveCliqueAction = @"/API/Cliques/get_clique";
+NSString *const OPFetchCliqueAction = @"/API/Cliques/get_clique";
 NSString *const OPRenameCliqueAction = @"/API/Cliques/rename_clique";
 NSString *const OPDeleteCliqueAction = @"/API/Cliques/delete_clique";
 NSString *const OPAddUserToCliqueAction = @"/API/Cliques/add";
@@ -265,6 +265,7 @@ NSString *mimeTypeForExtension(NSString *ext)
 	}
 	else if (![_queue count] && ![_request isRunning]) {
 		[_request setSessionInfo:sessionInfo];
+		[_request setTimeoutInterval:30.0];
 		[_request performMethod:LFHTTPRequestGETMethod onURL:URL withData:nil];
 	}
 	else {
@@ -385,23 +386,23 @@ NSString *mimeTypeForExtension(NSString *ext)
 		}
 	}
 	else if ([actionName isEqualToString:OPRetrivePollingMessageAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didRetrievePollingMessages:)]) {
-			[delegate plurk:self didRetrievePollingMessages:result];
+		if ([delegate respondsToSelector:@selector(plurk:didFetchPollingMessages:)]) {
+			[delegate plurk:self didFetchPollingMessages:result];
 		}
 	}
 	else if ([actionName isEqualToString:OPRetriveMessageAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didRetrieveMessage:)]) {
-			[delegate plurk:self didRetrieveMessage:result];
+		if ([delegate respondsToSelector:@selector(plurk:didFetchMessage:)]) {
+			[delegate plurk:self didFetchMessage:result];
 		}
 	}
 	else if ([actionName isEqualToString:OPRetriveMessagesAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didRetrieveMessages:)]) {
-			[delegate plurk:self didRetrieveMessages:result];
+		if ([delegate respondsToSelector:@selector(plurk:didFetchMessages:)]) {
+			[delegate plurk:self didFetchMessages:result];
 		}
 	}
 	else if ([actionName isEqualToString:OPRetriveUnreadMessagesAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didRetrieveUnreadMessages:)]) {
-			[delegate plurk:self didRetrieveUnreadMessages:result];
+		if ([delegate respondsToSelector:@selector(plurk:didFetchUnreadMessages:)]) {
+			[delegate plurk:self didFetchUnreadMessages:result];
 		}
 	}
 	else if ([actionName isEqualToString:OPMuteMessagesAction]) {
@@ -440,8 +441,8 @@ NSString *mimeTypeForExtension(NSString *ext)
 		}
 	}
 	else if ([actionName isEqualToString:OPRetriveResponsesAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didRetrieveResponses:)]) {
-			[delegate plurk:self didRetrieveResponses:result];
+		if ([delegate respondsToSelector:@selector(plurk:didFetchResponses:)]) {
+			[delegate plurk:self didFetchResponses:result];
 		}
 	}
 	else if ([actionName isEqualToString:OPAddResponsesAction]) {
@@ -454,29 +455,29 @@ NSString *mimeTypeForExtension(NSString *ext)
 			[delegate plurk:self didDeleteResponse:result];
 		}
 	}
-	else if ([actionName isEqualToString:OPRetrieveMyProfileAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didRetrieveMyProfile:)]) {
-			[delegate plurk:self didRetrieveMyProfile:result];
+	else if ([actionName isEqualToString:OPFetchMyProfileAction]) {
+		if ([delegate respondsToSelector:@selector(plurk:didFetchMyProfile:)]) {
+			[delegate plurk:self didFetchMyProfile:result];
 		}
 	}
-	else if ([actionName isEqualToString:OPRetrievePublicProfileAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didRetrievePublicProfile:)]) {
-			[delegate plurk:self didRetrievePublicProfile:result];
+	else if ([actionName isEqualToString:OPFetchPublicProfileAction]) {
+		if ([delegate respondsToSelector:@selector(plurk:didFetchPublicProfile:)]) {
+			[delegate plurk:self didFetchPublicProfile:result];
 		}
 	}
 	else if ([actionName isEqualToString:OPRetriveFriendAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didRetrieveFriends:)]) {
-			[delegate plurk:self didRetrieveFriends:result];
+		if ([delegate respondsToSelector:@selector(plurk:didFetchFriends:)]) {
+			[delegate plurk:self didFetchFriends:result];
 		}
 	}
 	else if ([actionName isEqualToString:OPRetriveFansAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didRetrieveFans:)]) {
-			[delegate plurk:self didRetrieveFans:result];
+		if ([delegate respondsToSelector:@selector(plurk:didFetchFans:)]) {
+			[delegate plurk:self didFetchFans:result];
 		}
 	}
 	else if ([actionName isEqualToString:OPRetriveFollowingAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didRetrieveFollowingUsers:)]) {
-			[delegate plurk:self didRetrieveFollowingUsers:result];
+		if ([delegate respondsToSelector:@selector(plurk:didFetchFollowingUsers:)]) {
+			[delegate plurk:self didFetchFollowingUsers:result];
 		}
 	}
 	else if ([actionName isEqualToString:OPBecomeFriendAction]) {
@@ -499,9 +500,9 @@ NSString *mimeTypeForExtension(NSString *ext)
 			[delegate plurk:self didSetFollowingUser:result];
 		}
 	}
-	else if ([actionName isEqualToString:OPRetrieveFriendsCompletionListAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didRetrieveFriendsCompletionList:)]) {
-			[delegate plurk:self didRetrieveFriendsCompletionList:result];
+	else if ([actionName isEqualToString:OPFetchFriendsCompletionListAction]) {
+		if ([delegate respondsToSelector:@selector(plurk:didFetchFriendsCompletionList:)]) {
+			[delegate plurk:self didFetchFriendsCompletionList:result];
 		}
 	}
 	else if ([actionName isEqualToString:OPRetriveActiveAlertsAction]) {
@@ -554,14 +555,14 @@ NSString *mimeTypeForExtension(NSString *ext)
 			[delegate plurk:self didSearchUsers:result];
 		}
 	}
-	else if ([actionName isEqualToString:OPRetrieveEmoticonsAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didRetrieveEmoticons:)]) {
-			[delegate plurk:self didRetrieveEmoticons:result];
+	else if ([actionName isEqualToString:OPFetchEmoticonsAction]) {
+		if ([delegate respondsToSelector:@selector(plurk:didFetchEmoticons:)]) {
+			[delegate plurk:self didFetchEmoticons:result];
 		}
 	}
-	else if ([actionName isEqualToString:OPRetrieveBlockedUsersAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didRetrieveBlockedUsers:)]) {
-			[delegate plurk:self didRetrieveBlockedUsers:result];
+	else if ([actionName isEqualToString:OPFetchBlockedUsersAction]) {
+		if ([delegate respondsToSelector:@selector(plurk:didFetchBlockedUsers:)]) {
+			[delegate plurk:self didFetchBlockedUsers:result];
 		}
 	}
 	else if ([actionName isEqualToString:OPBlockuUserAction]) {
@@ -574,9 +575,9 @@ NSString *mimeTypeForExtension(NSString *ext)
 			[delegate plurk:self didUnblockUser:result];
 		}
 	}
-	else if ([actionName isEqualToString:OPRetrieveCliquesAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didRetrieveCliques:)]) {
-			[delegate plurk:self didRetrieveCliques:result];
+	else if ([actionName isEqualToString:OPFetchCliquesAction]) {
+		if ([delegate respondsToSelector:@selector(plurk:didFetchCliques:)]) {
+			[delegate plurk:self didFetchCliques:result];
 		}
 	}
 	else if ([actionName isEqualToString:OPCreateNewCliqueAction]) {
@@ -584,9 +585,9 @@ NSString *mimeTypeForExtension(NSString *ext)
 			[delegate plurk:self didCreateNewClique:result];
 		}
 	}
-	else if ([actionName isEqualToString:OPRetrieveCliqueAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didRetrieveClique:)]) {
-			[delegate plurk:self didRetrieveClique:result];
+	else if ([actionName isEqualToString:OPFetchCliqueAction]) {
+		if ([delegate respondsToSelector:@selector(plurk:didFetchClique:)]) {
+			[delegate plurk:self didFetchClique:result];
 		}
 	}
 	else if ([actionName isEqualToString:OPRenameCliqueAction]) {
@@ -629,23 +630,23 @@ NSString *mimeTypeForExtension(NSString *ext)
 		}
 	}
 	else if ([actionName isEqualToString:OPRetrivePollingMessageAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didFailRetrievingPollingMessages:)]) {
-			[delegate plurk:self didFailRetrievingPollingMessages:error];
+		if ([delegate respondsToSelector:@selector(plurk:didFailFetchingPollingMessages:)]) {
+			[delegate plurk:self didFailFetchingPollingMessages:error];
 		}
 	}
 	else if ([actionName isEqualToString:OPRetriveMessageAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didFailRetrievingMessage:)]) {
-			[delegate plurk:self didFailRetrievingMessage:error];
+		if ([delegate respondsToSelector:@selector(plurk:didFailFetchingMessage:)]) {
+			[delegate plurk:self didFailFetchingMessage:error];
 		}
 	}
 	else if ([actionName isEqualToString:OPRetriveMessagesAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didFailRetrievingMessages:)]) {
-			[delegate plurk:self didFailRetrievingMessages:error];
+		if ([delegate respondsToSelector:@selector(plurk:didFailFetchingMessages:)]) {
+			[delegate plurk:self didFailFetchingMessages:error];
 		}
 	}
 	else if ([actionName isEqualToString:OPRetriveUnreadMessagesAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didFailRetrievingUnreadMessages:)]) {
-			[delegate plurk:self didFailRetrievingUnreadMessages:error];
+		if ([delegate respondsToSelector:@selector(plurk:didFailFetchingUnreadMessages:)]) {
+			[delegate plurk:self didFailFetchingUnreadMessages:error];
 		}
 	}
 	else if ([actionName isEqualToString:OPMuteMessagesAction]) {
@@ -684,8 +685,8 @@ NSString *mimeTypeForExtension(NSString *ext)
 		}
 	}
 	else if ([actionName isEqualToString:OPRetriveResponsesAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didFailRetrievingResponses:)]) {
-			[delegate plurk:self didFailRetrievingResponses:error];
+		if ([delegate respondsToSelector:@selector(plurk:didFailFetchingResponses:)]) {
+			[delegate plurk:self didFailFetchingResponses:error];
 		}
 	}
 	else if ([actionName isEqualToString:OPAddResponsesAction]) {
@@ -698,30 +699,30 @@ NSString *mimeTypeForExtension(NSString *ext)
 			[delegate plurk:self didFailDeletingResponse:error];
 		}
 	}
-	else if ([actionName isEqualToString:OPRetrieveMyProfileAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didFailRetrievingMyProfile:)]) {
-			[delegate plurk:self didFailRetrievingMyProfile:error];
+	else if ([actionName isEqualToString:OPFetchMyProfileAction]) {
+		if ([delegate respondsToSelector:@selector(plurk:didFailFetchingMyProfile:)]) {
+			[delegate plurk:self didFailFetchingMyProfile:error];
 		}
 	}
-	else if ([actionName isEqualToString:OPRetrievePublicProfileAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didFailRetrievingPublicProfile:)]) {
-			[delegate plurk:self didFailRetrievingPublicProfile:error];
+	else if ([actionName isEqualToString:OPFetchPublicProfileAction]) {
+		if ([delegate respondsToSelector:@selector(plurk:didFailFetchingPublicProfile:)]) {
+			[delegate plurk:self didFailFetchingPublicProfile:error];
 		}
 	}
 
 	else if ([actionName isEqualToString:OPRetriveFriendAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didFailRetrievingFriends:)]) {
-			[delegate plurk:self didFailRetrievingFriends:error];
+		if ([delegate respondsToSelector:@selector(plurk:didFailFetchingFriends:)]) {
+			[delegate plurk:self didFailFetchingFriends:error];
 		}
 	}
 	else if ([actionName isEqualToString:OPRetriveFansAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didFailRetrievingFans:)]) {
-			[delegate plurk:self didFailRetrievingFans:error];
+		if ([delegate respondsToSelector:@selector(plurk:didFailFetchingFans:)]) {
+			[delegate plurk:self didFailFetchingFans:error];
 		}
 	}
 	else if ([actionName isEqualToString:OPRetriveFollowingAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didFailRetrievingFollowingUsers:)]) {
-			[delegate plurk:self didFailRetrievingFollowingUsers:error];
+		if ([delegate respondsToSelector:@selector(plurk:didFailFetchingFollowingUsers:)]) {
+			[delegate plurk:self didFailFetchingFollowingUsers:error];
 		}
 	}
 	else if ([actionName isEqualToString:OPBecomeFriendAction]) {
@@ -744,9 +745,9 @@ NSString *mimeTypeForExtension(NSString *ext)
 			[delegate plurk:self didFailSettingFollowingUser:error];
 		}
 	}
-	else if ([actionName isEqualToString:OPRetrieveFriendsCompletionListAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didFailRetrievingFriendsCompletionList:)]) {
-			[delegate plurk:self didFailRetrievingFriendsCompletionList:error];
+	else if ([actionName isEqualToString:OPFetchFriendsCompletionListAction]) {
+		if ([delegate respondsToSelector:@selector(plurk:didFailFetchingFriendsCompletionList:)]) {
+			[delegate plurk:self didFailFetchingFriendsCompletionList:error];
 		}
 	}
 	else if ([actionName isEqualToString:OPRetriveActiveAlertsAction]) {
@@ -799,14 +800,14 @@ NSString *mimeTypeForExtension(NSString *ext)
 			[delegate plurk:self didFailSearchingUsers:error];
 		}
 	}
-	else if ([actionName isEqualToString:OPRetrieveEmoticonsAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didFailRetrievingEmoticons:)]) {
-			[delegate plurk:self didFailRetrievingEmoticons:error];
+	else if ([actionName isEqualToString:OPFetchEmoticonsAction]) {
+		if ([delegate respondsToSelector:@selector(plurk:didFailFetchingEmoticons:)]) {
+			[delegate plurk:self didFailFetchingEmoticons:error];
 		}
 	}
-	else if ([actionName isEqualToString:OPRetrieveBlockedUsersAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didFailRetrievingBlockedUsers:)]) {
-			[delegate plurk:self didFailRetrievingBlockedUsers:error];
+	else if ([actionName isEqualToString:OPFetchBlockedUsersAction]) {
+		if ([delegate respondsToSelector:@selector(plurk:didFailFetchingBlockedUsers:)]) {
+			[delegate plurk:self didFailFetchingBlockedUsers:error];
 		}
 	}
 	else if ([actionName isEqualToString:OPBlockuUserAction]) {
@@ -819,9 +820,9 @@ NSString *mimeTypeForExtension(NSString *ext)
 			[delegate plurk:self didFailUnblockingUser:error];
 		}
 	}
-	else if ([actionName isEqualToString:OPRetrieveCliquesAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didFailRetrievingCliques:)]) {
-			[delegate plurk:self didFailRetrievingCliques:error];
+	else if ([actionName isEqualToString:OPFetchCliquesAction]) {
+		if ([delegate respondsToSelector:@selector(plurk:didFailFetchingCliques:)]) {
+			[delegate plurk:self didFailFetchingCliques:error];
 		}
 	}
 	else if ([actionName isEqualToString:OPCreateNewCliqueAction]) {
@@ -829,9 +830,9 @@ NSString *mimeTypeForExtension(NSString *ext)
 			[delegate plurk:self didFailCreatingNewClique:error];
 		}
 	}
-	else if ([actionName isEqualToString:OPRetrieveCliqueAction]) {
-		if ([delegate respondsToSelector:@selector(plurk:didFailRetrievingClique:)]) {
-			[delegate plurk:self didFailRetrievingClique:error];
+	else if ([actionName isEqualToString:OPFetchCliqueAction]) {
+		if ([delegate respondsToSelector:@selector(plurk:didFailFetchingClique:)]) {
+			[delegate plurk:self didFailFetchingClique:error];
 		}
 	}
 	else if ([actionName isEqualToString:OPRenameCliqueAction]) {
@@ -860,7 +861,6 @@ NSString *mimeTypeForExtension(NSString *ext)
 
 - (void)httpRequest:(LFHTTPRequest *)request didReceiveStatusCode:(NSUInteger)statusCode URL:(NSURL *)url responseHeader:(CFHTTPMessageRef)header
 {
-//	NSLog(@"%d", statusCode);
 	id tmp = _receivedHeader;
 	CFDictionaryRef headerRef = CFHTTPMessageCopyAllHeaderFields(header);
 	_receivedHeader = [[NSDictionary alloc] initWithDictionary:(NSDictionary *)headerRef];

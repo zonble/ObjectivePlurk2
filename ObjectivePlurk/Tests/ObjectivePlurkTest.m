@@ -46,13 +46,13 @@ NS_INLINE NSString *GenerateUUIDString()
 	[[ObjectivePlurk sharedInstance] updateProfileWithOldPassword:PASSWD fullname:@"ObjectivePlurk Test" newPassword:nil email:@"example@exmaple.com" displayName:@"for unittest" privacy:OPPrivacyOnlyFriends dateOfBirth:nil delegate:self userInfo:nil];
 	[[ObjectivePlurk sharedInstance] updateProfileWithOldPassword:PASSWD fullname:@"Objective Plurk" newPassword:nil email:@"objplurk@zonble.net" displayName:@"Objective Plurk" privacy:OPPrivacyWorld dateOfBirth:nil delegate:self userInfo:nil];
 	
-	[[ObjectivePlurk sharedInstance] retrievePollingMessagesWithDateOffset:[NSDate dateWithTimeIntervalSinceNow:-60 * 60 * 24 *3] delegate:self userInfo:nil];
+	[[ObjectivePlurk sharedInstance] fetchPollingMessagesWithDateOffset:[NSDate dateWithTimeIntervalSinceNow:-60 * 60 * 24 *3] delegate:self userInfo:nil];
 	
 	[[ObjectivePlurk sharedInstance] addNewMessageWithContent:[NSString stringWithFormat:@"Unittest - new: %@", GenerateUUIDString()] qualifier:@":" othersCanComment:YES lang:@"en" limitToUsers:nil delegate:self userInfo:nil];
-	[[ObjectivePlurk sharedInstance] retrieveMessagesWithDateOffset:nil limit:0 user:[currentUserInfo valueForKey:@"uid"] isResponded:NO isPrivate:NO delegate:self userInfo:nil];
+	[[ObjectivePlurk sharedInstance] fetchMessagesWithDateOffset:nil limit:0 user:[currentUserInfo valueForKey:@"uid"] isResponded:NO isPrivate:NO delegate:self userInfo:nil];
 	
-	[[ObjectivePlurk sharedInstance] retrieveMyProfileWithDelegate:self userInfo:nil];
-	[[ObjectivePlurk sharedInstance] retrieveFriendsCompletionList:self userInfo:nil];
+	[[ObjectivePlurk sharedInstance] fetchMyProfileWithDelegate:self userInfo:nil];
+	[[ObjectivePlurk sharedInstance] fetchFriendsCompletionList:self userInfo:nil];
 
 }
 
@@ -162,7 +162,7 @@ NS_INLINE NSString *GenerateUUIDString()
 
 #pragma mark Polling
 
-- (void)plurk:(ObjectivePlurk *)plurk didRetrievePollingMessages:(NSDictionary *)result
+- (void)plurk:(ObjectivePlurk *)plurk didFetchPollingMessages:(NSDictionary *)result
 {
 //	STFail(@"%s %@", __PRETTY_FUNCTION__, [result description]);
 	
@@ -179,14 +179,14 @@ NS_INLINE NSString *GenerateUUIDString()
 	}	
 	
 }
-- (void)plurk:(ObjectivePlurk *)plurk didFailRetrievingPollingMessages:(NSError *)error
+- (void)plurk:(ObjectivePlurk *)plurk didFailFetchingPollingMessages:(NSError *)error
 {
 	STFail(@"%s %@", __PRETTY_FUNCTION__, [error localizedDescription]);
 }
 
 #pragma mark Timeline
 
-- (void)plurk:(ObjectivePlurk *)plurk didRetrieveMessage:(NSDictionary *)result
+- (void)plurk:(ObjectivePlurk *)plurk didFetchMessage:(NSDictionary *)result
 {
 //	STFail(@"%s %@", __PRETTY_FUNCTION__, [result description]);
 	NSDictionary *message = [result valueForKey:@"plurk"];
@@ -194,12 +194,12 @@ NS_INLINE NSString *GenerateUUIDString()
 	[self _validateMessage:message];
 	[self _validateUser:user];
 }
-- (void)plurk:(ObjectivePlurk *)plurk didFailRetrievingMessage:(NSError *)error
+- (void)plurk:(ObjectivePlurk *)plurk didFailFetchingMessage:(NSError *)error
 {
 	STFail(@"%s %@", __PRETTY_FUNCTION__, [error localizedDescription]);
 }
 
-- (void)plurk:(ObjectivePlurk *)plurk didRetrieveMessages:(NSDictionary *)result
+- (void)plurk:(ObjectivePlurk *)plurk didFetchMessages:(NSDictionary *)result
 {
 //	STFail(@"%s %@", __PRETTY_FUNCTION__, [result description]);
 	NSArray *messages = [result valueForKey:@"plurks"];
@@ -215,7 +215,7 @@ NS_INLINE NSString *GenerateUUIDString()
 	}
 	if ([messages count]) {
 		NSDictionary *firstMessage = [messages objectAtIndex:0];
-		[plurk retrieveMessageWithMessageIdentifier:[firstMessage valueForKey:@"plurk_id"] delegate:self userInfo:nil];
+		[plurk fetchMessageWithMessageIdentifier:[firstMessage valueForKey:@"plurk_id"] delegate:self userInfo:nil];
 	}
 	NSArray *messageIDs = [messages valueForKeyPath:@"plurk_id"];
 	
@@ -229,7 +229,7 @@ NS_INLINE NSString *GenerateUUIDString()
 	}
 	
 }
-- (void)plurk:(ObjectivePlurk *)plurk didFailRetrievingMessages:(NSError *)error
+- (void)plurk:(ObjectivePlurk *)plurk didFailFetchingMessages:(NSError *)error
 {
 	STFail(@"%s %@", __PRETTY_FUNCTION__, [error localizedDescription]);
 }
@@ -300,7 +300,7 @@ NS_INLINE NSString *GenerateUUIDString()
 	for (NSInteger i = 0; i < 5; i++) {
 		[plurk addNewResponseWithContent:[NSString stringWithFormat:@"Unittest - response: %@", GenerateUUIDString()] qualifier:@":" toMessages:[result valueForKey:@"plurk_id"] delegate:self userInfo:nil];
 	}
-	[plurk retrieveResponsesWithMessageIdentifier:[result valueForKey:@"plurk_id"] delegate:self userInfo:nil];
+	[plurk fetchResponsesWithMessageIdentifier:[result valueForKey:@"plurk_id"] delegate:self userInfo:nil];
 }
 - (void)plurk:(ObjectivePlurk *)plurk didFailEditingMessage:(NSError *)error
 {
@@ -321,7 +321,7 @@ NS_INLINE NSString *GenerateUUIDString()
 
 #pragma mark Responses
 
-- (void)plurk:(ObjectivePlurk *)plurk didRetrieveResponses:(NSDictionary *)result
+- (void)plurk:(ObjectivePlurk *)plurk didFetchResponses:(NSDictionary *)result
 {
 //	STFail(@"%s %@", __PRETTY_FUNCTION__, [result description]);
 	NSArray *responses = [result valueForKey:@"responses"];
@@ -333,7 +333,7 @@ NS_INLINE NSString *GenerateUUIDString()
 		[plurk deleteResponseWithMessageIdentifier:[response valueForKey:@"plurk_id"] responseIdentifier:[response valueForKey:@"id"] delegate:self userInfo:nil];
 	}
 }
-- (void)plurk:(ObjectivePlurk *)plurk didFailRetrievingResponses:(NSError *)error
+- (void)plurk:(ObjectivePlurk *)plurk didFailFetchingResponses:(NSError *)error
 {
 	STFail(@"%s %@", __PRETTY_FUNCTION__, [error localizedDescription]);
 }
@@ -362,7 +362,7 @@ NS_INLINE NSString *GenerateUUIDString()
 
 #pragma mark Profiles
 
-- (void)plurk:(ObjectivePlurk *)plurk didRetrieveMyProfile:(NSDictionary *)result
+- (void)plurk:(ObjectivePlurk *)plurk didFetchMyProfile:(NSDictionary *)result
 {
 	NSArray *messages = [result valueForKey:@"plurks"];
 	STAssertNotNil(messages, @"There should be messages after loggin in.");
@@ -381,42 +381,42 @@ NS_INLINE NSString *GenerateUUIDString()
 	[self _validateUserInfo:userInfo];	
 	self.currentUserInfo = userInfo;
 }
-- (void)plurk:(ObjectivePlurk *)plurk didFailRetrievingMyProfile:(NSError *)error
+- (void)plurk:(ObjectivePlurk *)plurk didFailFetchingMyProfile:(NSError *)error
 {
 	STFail(@"%s %@", __PRETTY_FUNCTION__, [error localizedDescription]);
 }
 
-- (void)plurk:(ObjectivePlurk *)plurk didRetrievePublicProfile:(NSDictionary *)result
+- (void)plurk:(ObjectivePlurk *)plurk didFetchPublicProfile:(NSDictionary *)result
 {
 	STFail(@"%s %@", __PRETTY_FUNCTION__, [result description]);
 }
-- (void)plurk:(ObjectivePlurk *)plurk didFailRetrievingPublicProfile:(NSError *)error
+- (void)plurk:(ObjectivePlurk *)plurk didFailFetchingPublicProfile:(NSError *)error
 {
 	STFail(@"%s %@", __PRETTY_FUNCTION__, [error localizedDescription]);
 }
 
 #pragma mark Friends and fans
 
-- (void)plurk:(ObjectivePlurk *)plurk didRetrieveFriends:(NSDictionary *)result
+- (void)plurk:(ObjectivePlurk *)plurk didFetchFriends:(NSDictionary *)result
 {
 }
-- (void)plurk:(ObjectivePlurk *)plurk didFailRetrievingFriends:(NSError *)error
-{
-	STFail(@"%s %@", __PRETTY_FUNCTION__, [error localizedDescription]);
-}
-
-- (void)plurk:(ObjectivePlurk *)plurk didRetrieveFans:(NSDictionary *)result
-{
-}
-- (void)plurk:(ObjectivePlurk *)plurk didFailRetrievingFans:(NSError *)error
+- (void)plurk:(ObjectivePlurk *)plurk didFailFetchingFriends:(NSError *)error
 {
 	STFail(@"%s %@", __PRETTY_FUNCTION__, [error localizedDescription]);
 }
 
-- (void)plurk:(ObjectivePlurk *)plurk didRetrieveFollowingUsers:(NSDictionary *)result
+- (void)plurk:(ObjectivePlurk *)plurk didFetchFans:(NSDictionary *)result
 {
 }
-- (void)plurk:(ObjectivePlurk *)plurk didFailRetrievingFollowingUsers:(NSError *)error
+- (void)plurk:(ObjectivePlurk *)plurk didFailFetchingFans:(NSError *)error
+{
+	STFail(@"%s %@", __PRETTY_FUNCTION__, [error localizedDescription]);
+}
+
+- (void)plurk:(ObjectivePlurk *)plurk didFetchFollowingUsers:(NSDictionary *)result
+{
+}
+- (void)plurk:(ObjectivePlurk *)plurk didFailFetchingFollowingUsers:(NSError *)error
 {
 	STFail(@"%s %@", __PRETTY_FUNCTION__, [error localizedDescription]);
 }
@@ -453,10 +453,10 @@ NS_INLINE NSString *GenerateUUIDString()
 	STFail(@"%s %@", __PRETTY_FUNCTION__, [error localizedDescription]);
 }
 
-- (void)plurk:(ObjectivePlurk *)plurk didRetrieveFriendsCompletionList:(NSDictionary *)result
+- (void)plurk:(ObjectivePlurk *)plurk didFetchFriendsCompletionList:(NSDictionary *)result
 {
 }
-- (void)plurk:(ObjectivePlurk *)plurk didFailRetrievingFriendsCompletionList:(NSError *)error
+- (void)plurk:(ObjectivePlurk *)plurk didFailFetchingFriendsCompletionList:(NSError *)error
 {
 	STFail(@"%s %@", __PRETTY_FUNCTION__, [error localizedDescription]);
 }

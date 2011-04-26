@@ -2,7 +2,7 @@
 // ObjectivePlurk+PrivateMethods.h
 // ObjectivePlurk
 //
-// Copyright (c) 2009 Weizhong Yang (http://zonble.net)
+// Copyright (c) 2009-2011 Weizhong Yang (http://zonble.net)
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without

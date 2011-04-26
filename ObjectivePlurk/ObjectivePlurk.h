@@ -50,19 +50,19 @@
 
 #pragma mark Polling
 
-- (void)plurk:(ObjectivePlurk *)plurk didRetrievePollingMessages:(NSDictionary *)result;
-- (void)plurk:(ObjectivePlurk *)plurk didFailRetrievingPollingMessages:(NSError *)error;
+- (void)plurk:(ObjectivePlurk *)plurk didFetchPollingMessages:(NSDictionary *)result;
+- (void)plurk:(ObjectivePlurk *)plurk didFailFetchingPollingMessages:(NSError *)error;
 
 #pragma mark Timeline
 
-- (void)plurk:(ObjectivePlurk *)plurk didRetrieveMessage:(NSDictionary *)result;
-- (void)plurk:(ObjectivePlurk *)plurk didFailRetrievingMessage:(NSError *)error;
+- (void)plurk:(ObjectivePlurk *)plurk didFetchMessage:(NSDictionary *)result;
+- (void)plurk:(ObjectivePlurk *)plurk didFailFetchingMessage:(NSError *)error;
 
-- (void)plurk:(ObjectivePlurk *)plurk didRetrieveMessages:(NSDictionary *)result;
-- (void)plurk:(ObjectivePlurk *)plurk didFailRetrievingMessages:(NSError *)error;
+- (void)plurk:(ObjectivePlurk *)plurk didFetchMessages:(NSDictionary *)result;
+- (void)plurk:(ObjectivePlurk *)plurk didFailFetchingMessages:(NSError *)error;
 
-- (void)plurk:(ObjectivePlurk *)plurk didRetrieveUnreadMessages:(NSDictionary *)result;
-- (void)plurk:(ObjectivePlurk *)plurk didFailRetrievingUnreadMessages:(NSError *)error;
+- (void)plurk:(ObjectivePlurk *)plurk didFetchUnreadMessages:(NSDictionary *)result;
+- (void)plurk:(ObjectivePlurk *)plurk didFailFetchingUnreadMessages:(NSError *)error;
 
 - (void)plurk:(ObjectivePlurk *)plurk didMuteMessages:(NSDictionary *)result;
 - (void)plurk:(ObjectivePlurk *)plurk didFailMutingMessages:(NSError *)error;
@@ -87,8 +87,8 @@
 
 #pragma mark Responses
 
-- (void)plurk:(ObjectivePlurk *)plurk didRetrieveResponses:(NSDictionary *)result;
-- (void)plurk:(ObjectivePlurk *)plurk didFailRetrievingResponses:(NSError *)error;
+- (void)plurk:(ObjectivePlurk *)plurk didFetchResponses:(NSDictionary *)result;
+- (void)plurk:(ObjectivePlurk *)plurk didFailFetchingResponses:(NSError *)error;
 
 - (void)plurk:(ObjectivePlurk *)plurk didAddResponse:(NSDictionary *)result;
 - (void)plurk:(ObjectivePlurk *)plurk didFailAddingResponse:(NSError *)error;
@@ -98,22 +98,22 @@
 
 #pragma mark Profiles
 
-- (void)plurk:(ObjectivePlurk *)plurk didRetrieveMyProfile:(NSDictionary *)result;
-- (void)plurk:(ObjectivePlurk *)plurk didFailRetrievingMyProfile:(NSError *)error;
+- (void)plurk:(ObjectivePlurk *)plurk didFetchMyProfile:(NSDictionary *)result;
+- (void)plurk:(ObjectivePlurk *)plurk didFailFetchingMyProfile:(NSError *)error;
 
-- (void)plurk:(ObjectivePlurk *)plurk didRetrievePublicProfile:(NSDictionary *)result;
-- (void)plurk:(ObjectivePlurk *)plurk didFailRetrievingPublicProfile:(NSError *)error;
+- (void)plurk:(ObjectivePlurk *)plurk didFetchPublicProfile:(NSDictionary *)result;
+- (void)plurk:(ObjectivePlurk *)plurk didFailFetchingPublicProfile:(NSError *)error;
 
 #pragma mark Friends and fans
 
-- (void)plurk:(ObjectivePlurk *)plurk didRetrieveFriends:(NSDictionary *)result;
-- (void)plurk:(ObjectivePlurk *)plurk didFailRetrievingFriends:(NSError *)error;
+- (void)plurk:(ObjectivePlurk *)plurk didFetchFriends:(NSDictionary *)result;
+- (void)plurk:(ObjectivePlurk *)plurk didFailFetchingFriends:(NSError *)error;
 
-- (void)plurk:(ObjectivePlurk *)plurk didRetrieveFans:(NSDictionary *)result;
-- (void)plurk:(ObjectivePlurk *)plurk didFailRetrievingFans:(NSError *)error;
+- (void)plurk:(ObjectivePlurk *)plurk didFetchFans:(NSDictionary *)result;
+- (void)plurk:(ObjectivePlurk *)plurk didFailFetchingFans:(NSError *)error;
 
-- (void)plurk:(ObjectivePlurk *)plurk didRetrieveFollowingUsers:(NSDictionary *)result;
-- (void)plurk:(ObjectivePlurk *)plurk didFailRetrievingFollowingUsers:(NSError *)error;
+- (void)plurk:(ObjectivePlurk *)plurk didFetchFollowingUsers:(NSDictionary *)result;
+- (void)plurk:(ObjectivePlurk *)plurk didFailFetchingFollowingUsers:(NSError *)error;
 
 - (void)plurk:(ObjectivePlurk *)plurk didBecomeFriend:(NSDictionary *)result;
 - (void)plurk:(ObjectivePlurk *)plurk didFailBecomingFriend:(NSError *)error;
@@ -127,8 +127,8 @@
 - (void)plurk:(ObjectivePlurk *)plurk didSetFollowingUser:(NSDictionary *)result;
 - (void)plurk:(ObjectivePlurk *)plurk didFailSettingFollowingUser:(NSError *)error;
 
-- (void)plurk:(ObjectivePlurk *)plurk didRetrieveFriendsCompletionList:(NSDictionary *)result;
-- (void)plurk:(ObjectivePlurk *)plurk didFailRetrievingFriendsCompletionList:(NSError *)error;
+- (void)plurk:(ObjectivePlurk *)plurk didFetchFriendsCompletionList:(NSDictionary *)result;
+- (void)plurk:(ObjectivePlurk *)plurk didFailFetchingFriendsCompletionList:(NSError *)error;
 
 #pragma mark Alerts
 
@@ -166,13 +166,13 @@
 
 #pragma mark Emoticons
 
-- (void)plurk:(ObjectivePlurk *)plurk didRetrieveEmoticons:(NSDictionary *)result;
-- (void)plurk:(ObjectivePlurk *)plurk didFailRetrievingEmoticons:(NSError *)error;
+- (void)plurk:(ObjectivePlurk *)plurk didFetchEmoticons:(NSDictionary *)result;
+- (void)plurk:(ObjectivePlurk *)plurk didFailFetchingEmoticons:(NSError *)error;
 
 #pragma mark Blocks
 
-- (void)plurk:(ObjectivePlurk *)plurk didRetrieveBlockedUsers:(NSDictionary *)result;
-- (void)plurk:(ObjectivePlurk *)plurk didFailRetrievingBlockedUsers:(NSError *)error;
+- (void)plurk:(ObjectivePlurk *)plurk didFetchBlockedUsers:(NSDictionary *)result;
+- (void)plurk:(ObjectivePlurk *)plurk didFailFetchingBlockedUsers:(NSError *)error;
 
 - (void)plurk:(ObjectivePlurk *)plurk didBlockUser:(NSDictionary *)result;
 - (void)plurk:(ObjectivePlurk *)plurk didFailBlockingUser:(NSError *)error;
@@ -182,14 +182,14 @@
 
 #pragma mark Cliques
 
-- (void)plurk:(ObjectivePlurk *)plurk didRetrieveCliques:(NSDictionary *)result;
-- (void)plurk:(ObjectivePlurk *)plurk didFailRetrievingCliques:(NSError *)error;
+- (void)plurk:(ObjectivePlurk *)plurk didFetchCliques:(NSDictionary *)result;
+- (void)plurk:(ObjectivePlurk *)plurk didFailFetchingCliques:(NSError *)error;
 
 - (void)plurk:(ObjectivePlurk *)plurk didCreateNewClique:(NSDictionary *)result;
 - (void)plurk:(ObjectivePlurk *)plurk didFailCreatingNewClique:(NSError *)error;
 
-- (void)plurk:(ObjectivePlurk *)plurk didRetrieveClique:(NSDictionary *)result;
-- (void)plurk:(ObjectivePlurk *)plurk didFailRetrievingClique:(NSError *)error;
+- (void)plurk:(ObjectivePlurk *)plurk didFetchClique:(NSDictionary *)result;
+- (void)plurk:(ObjectivePlurk *)plurk didFailFetchingClique:(NSError *)error;
 
 - (void)plurk:(ObjectivePlurk *)plurk didRenameClique:(NSDictionary *)result;
 - (void)plurk:(ObjectivePlurk *)plurk didFailRenamingClique:(NSError *)error;
@@ -267,8 +267,8 @@ extern NSString *const OPRetriveResponsesAction;
 extern NSString *const OPAddResponsesAction;
 extern NSString *const OPDeleteResponsesAction;
 
-extern NSString *const OPRetrieveMyProfileAction;
-extern NSString *const OPRetrievePublicProfileAction;
+extern NSString *const OPFetchMyProfileAction;
+extern NSString *const OPFetchPublicProfileAction;
 
 extern NSString *const OPRetriveFriendAction;
 extern NSString *const OPRetriveFansAction;
@@ -277,7 +277,7 @@ extern NSString *const OPBecomeFriendAction;
 extern NSString *const OPRemoveFriendshipAction;
 extern NSString *const OPBecomeFanAction;
 extern NSString *const OPSetFollowingAction;
-extern NSString *const OPRetrieveFriendsCompletionListAction;
+extern NSString *const OPFetchFriendsCompletionListAction;
 
 extern NSString *const OPRetriveActiveAlertsAction;
 extern NSString *const OPRetriveHistoryAction;
@@ -291,15 +291,15 @@ extern NSString *const OPRemoveNotificationAction;
 extern NSString *const OPSearchMessagesAction;
 extern NSString *const OPSearchUsersAction;
 
-extern NSString *const OPRetrieveEmoticonsAction;
+extern NSString *const OPFetchEmoticonsAction;
 
-extern NSString *const OPRetrieveBlockedUsersAction;
+extern NSString *const OPFetchBlockedUsersAction;
 extern NSString *const OPBlockuUserAction;
 extern NSString *const OPUnblockuUserAction;
 
-extern NSString *const OPRetrieveCliquesAction;
+extern NSString *const OPFetchCliquesAction;
 extern NSString *const OPCreateNewCliqueAction;
-extern NSString *const OPRetrieveCliqueAction;
+extern NSString *const OPFetchCliqueAction;
 extern NSString *const OPRenameCliqueAction;
 extern NSString *const OPDeleteCliqueAction;
 extern NSString *const OPAddUserToCliqueAction;
@@ -342,13 +342,13 @@ extern NSString *const OPRemoveUserFromCliqueAction;
 
 #pragma mark Polling
 
-- (void)retrievePollingMessagesWithDateOffset:(NSDate *)offsetDate delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
+- (void)fetchPollingMessagesWithDateOffset:(NSDate *)offsetDate delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
 
 #pragma mark Timeline
 
-- (void)retrieveMessageWithMessageIdentifier:(NSString *)identifer delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
-- (void)retrieveMessagesWithDateOffset:(NSDate *)offsetDate limit:(NSInteger)limit user:(NSString *)userID isResponded:(BOOL)isResponded isPrivate:(BOOL)isPrivate delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
-- (void)retrieveUnreadMessagesWithDateOffset:(NSDate *)offsetDate limit:(NSInteger)limit delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
+- (void)fetchMessageWithMessageIdentifier:(NSString *)identifer delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
+- (void)fetchMessagesWithDateOffset:(NSDate *)offsetDate limit:(NSInteger)limit user:(NSString *)userID isResponded:(BOOL)isResponded isPrivate:(BOOL)isPrivate delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
+- (void)fetchUnreadMessagesWithDateOffset:(NSDate *)offsetDate limit:(NSInteger)limit delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
 - (void)muteMessagesWithMessageIdentifiers:(NSArray *)identifiers delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
 - (void)unmuteMessagesWithMessageIdentifiers:(NSArray *)identifiers delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
 - (void)markMessagesAsReadWithMessageIdentifiers:(NSArray *)identifiers delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
@@ -359,30 +359,30 @@ extern NSString *const OPRemoveUserFromCliqueAction;
 
 #pragma mark Responses
 
-- (void)retrieveResponsesWithMessageIdentifier:(NSString *)identifer delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
+- (void)fetchResponsesWithMessageIdentifier:(NSString *)identifer delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
 - (void)addNewResponseWithContent:(NSString *)content qualifier:(NSString *)qualifier toMessages:(NSString *)identifer delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
 - (void)deleteResponseWithMessageIdentifier:(NSString *)identifer responseIdentifier:(NSString *)responseIdentifier delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
 
 #pragma mark Profiles
 
-- (void)retrieveMyProfileWithDelegate:(id)delegate userInfo:(NSDictionary *)userInfo;
-- (void)retrievePublicProfileWithUserIdentifier:(NSString *)userIdentifier delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
+- (void)fetchMyProfileWithDelegate:(id)delegate userInfo:(NSDictionary *)userInfo;
+- (void)fetchPublicProfileWithUserIdentifier:(NSString *)userIdentifier delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
 
 #pragma mark Friends and fans
 
-- (void)retrieveFriendsOfUser:(NSString *)userIdentifier offset:(NSUInteger)offset delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
-- (void)retrieveFansOfUser:(NSString *)userIdentifier offset:(NSUInteger)offset delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
-- (void)retrieveFollowingUsersOfCurrentUserWithOffset:(NSUInteger)offset delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
+- (void)fetchFriendsOfUser:(NSString *)userIdentifier offset:(NSUInteger)offset delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
+- (void)fetchFansOfUser:(NSString *)userIdentifier offset:(NSUInteger)offset delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
+- (void)fetchFollowingUsersOfCurrentUserWithOffset:(NSUInteger)offset delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
 - (void)becomeFriendOfUser:(NSString *)userIdentifier delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
 - (void)removeFriendshipWithUser:(NSString *)userIdentifier delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
 - (void)becomeFanOfUser:(NSString *)userIdentifier delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
 - (void)setFollowingUser:(NSString *)userIdentifier follow:(BOOL)follow delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
-- (void)retrieveFriendsCompletionList:(id)delegate userInfo:(NSDictionary *)userInfo;
+- (void)fetchFriendsCompletionList:(id)delegate userInfo:(NSDictionary *)userInfo;
 
 #pragma mark Alerts
 
-- (void)retriveActiveAlertsWithDelegate:(id)delegate userInfo:(NSDictionary *)userInfo;
-- (void)retrivetHistoryWithDelegate:(id)delegate userInfo:(NSDictionary *)userInfo;
+- (void)fetchActiveAlertsWithDelegate:(id)delegate userInfo:(NSDictionary *)userInfo;
+- (void)fetchHistoryWithDelegate:(id)delegate userInfo:(NSDictionary *)userInfo;
 - (void)addAsFanWithUserIdentifier:(NSString *)userIdentifier delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
 - (void)addAllAsFanWithDelegate:(id)delegate userInfo:(NSDictionary *)userInfo;
 - (void)addAsFriendWithUserIdentifier:(NSString *)userIdentifier delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
@@ -397,19 +397,19 @@ extern NSString *const OPRemoveUserFromCliqueAction;
 
 #pragma mark Emoticons
 
-- (void)retriveEmoticonsWithDelegate:(id)delegate userInfo:(NSDictionary *)userInfo;
+- (void)fetchEmoticonsWithDelegate:(id)delegate userInfo:(NSDictionary *)userInfo;
 
 #pragma mark Blocks
 
-- (void)retrieveBlockedUsersWithDelegate:(id)delegate userInfo:(NSDictionary *)userInfo;
+- (void)fetchBlockedUsersWithDelegate:(id)delegate userInfo:(NSDictionary *)userInfo;
 - (void)blockUser:(NSString *)userIdentifier delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
 - (void)unblockUser:(NSString *)userIdentifier delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
 
 #pragma mark Cliques
 
-- (void)retrieveCliquesWithDelegate:(id)delegate userInfo:(NSDictionary *)userInfo;
+- (void)fetchCliquesWithDelegate:(id)delegate userInfo:(NSDictionary *)userInfo;
 - (void)createNewCliqueWithName:(NSString *)cliqueName delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
-- (void)retrieveCliqueWithName:(NSString *)cliqueName delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
+- (void)fetchCliqueWithName:(NSString *)cliqueName delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
 - (void)renameCliqueWithOldName:(NSString *)oldName newName:(NSString *)newName delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
 - (void)deleteCliqueWithName:(NSString *)cliqueName delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
 - (void)addUser:(NSString *)userIdentifier toClique:(NSString *)cliqueName delegate:(id)delegate userInfo:(NSDictionary *)userInfo;
