@@ -1,32 +1,38 @@
 //
 // ObjectivePlurk+PrivateMethods.m
 // ObjectivePlurk
-// 
+//
 // Copyright (c) 2009-2011 Weizhong Yang (http://zonble.net)
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are met:
+// modification, are permitted provided that the following conditions
+// are met:
 //
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of Weizhong Yang (zonble) nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-// 
+//	   * Redistributions of source code must retain the above
+//		 copyright notice, this list of conditions and the following
+//		 disclaimer.
+//	   * Redistributions in binary form must reproduce the above
+//		 copyright notice, this list of conditions and the following
+//		 disclaimer in the documentation and/or other materials
+//		 provided with the distribution.
+//	   * Neither the name of Weizhong Yang (zonble) nor the names of
+//		 its contributors may be used to endorse or promote products
+//		 derived from this software without specific prior written
+//		 permission.
+//
 // THIS SOFTWARE IS PROVIDED BY WEIZHONG YANG ''AS IS'' AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL WEIZHONG YANG BE LIABLE FOR ANY
-// DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+// PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL WEIZHONG YANG BE LIABLE
+// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+// OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+// BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+// LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+// USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+// DAMAGE.
 
 #import <CommonCrypto/CommonDigest.h>
 #import "ObjectivePlurk+PrivateMethods.h"
@@ -105,9 +111,9 @@ NSString *const OPRemoveUserFromCliqueAction = @"/API/Cliques/remove";
 
 NS_INLINE NSString *GenerateUUIDString()
 {
-    CFUUIDRef uuid = CFUUIDCreate(NULL);
-    CFStringRef uuidStr = CFUUIDCreateString(NULL, uuid);
-    CFRelease(uuid);
+	CFUUIDRef uuid = CFUUIDCreate(NULL);
+	CFStringRef uuidStr = CFUUIDCreateString(NULL, uuid);
+	CFRelease(uuid);
 
 #if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_4
 	return (NSString *)[(NSString*)uuidStr autorelease];
@@ -119,31 +125,31 @@ NS_INLINE NSString *GenerateUUIDString()
 // http://developer.apple.com/macosx/uniformtypeidentifiers.html
 
 NSString *mimeTypeForExtension(NSString *ext)
-{	
+{
 #if TARGET_OS_IPHONE && __IPHONE_OS_VERSION_MAX_ALLOWED <= __IPHONE_2_2
 	return @"application/octet-stream";
 #else
 	NSString* mimeType = nil;
 
-    CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (CFStringRef)ext, NULL);
-    if (!UTI) return nil;
+	CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (CFStringRef)ext, NULL);
+	if (!UTI) return nil;
 
-    CFStringRef registeredType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType);
-    if (!registeredType) {
-        if ([ext isEqualToString:@"m4v"]) {
+	CFStringRef registeredType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType);
+	if (!registeredType) {
+		if ([ext isEqualToString:@"m4v"]) {
 			mimeType = @"video/x-m4v";
 		}
-        else if ([ext isEqualToString:@"m4p"]) {
+		else if ([ext isEqualToString:@"m4p"]) {
 			mimeType = @"audio/x-m4p";
 		}
-    }
+	}
 	else {
 		mimeType = (NSString *)registeredType;
 		[mimeType autorelease];
 	}
 
-    CFRelease(UTI);
-    return mimeType;
+	CFRelease(UTI);
+	return mimeType;
 
 #endif
 }
@@ -154,9 +160,9 @@ NSString *mimeTypeForExtension(NSString *ext)
 
 - (BOOL)uploadFile:(NSString *)inPath suggestedFilename:(NSString *)inFilename requestURL:(NSURL *)requestURL multipartName:(NSString *)multipartName sessionInfo:(NSDictionary *)sessionInfo
 {
-    if ([_request isRunning] || ![self isLoggedIn]) {
-        return NO;
-    }
+	if ([_request isRunning] || ![self isLoggedIn]) {
+		return NO;
+	}
 
 	NSString *filename = [inFilename length] ? inFilename : [inPath lastPathComponent];
 	NSAssert([filename length], @"Must have the last path component");
@@ -165,23 +171,23 @@ NSString *mimeTypeForExtension(NSString *ext)
 	NSAssert1(sourceStream, @"File not exists or cannot open stream: %@", inPath);
 
 	NSString *boundary = @"---------------------------4ffac661b35420acd1bcceb11c1f610b";
-    NSMutableData *postData = [NSMutableData data];
-    
-    NSString *api_key = [NSString stringWithFormat:@"Content-Disposition: form-data; name=\"api_key\"\r\n\r\n%@", APIKey];
-    NSString *boundaryString = [NSString stringWithFormat:@"\r\n--%@\r\n", boundary];
-    NSString *boundaryStringFinal = [NSString stringWithFormat:@"\r\n--%@--\r\n", boundary];
-	
-    [postData appendData:[boundaryString dataUsingEncoding:NSUTF8StringEncoding]];
-    [postData appendData:[api_key dataUsingEncoding:NSUTF8StringEncoding]];
-    [postData appendData:[boundaryString dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    [postData appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", multipartName, filename] dataUsingEncoding:NSUTF8StringEncoding]];
+	NSMutableData *postData = [NSMutableData data];
+
+	NSString *api_key = [NSString stringWithFormat:@"Content-Disposition: form-data; name=\"api_key\"\r\n\r\n%@", APIKey];
+	NSString *boundaryString = [NSString stringWithFormat:@"\r\n--%@\r\n", boundary];
+	NSString *boundaryStringFinal = [NSString stringWithFormat:@"\r\n--%@--\r\n", boundary];
+
+	[postData appendData:[boundaryString dataUsingEncoding:NSUTF8StringEncoding]];
+	[postData appendData:[api_key dataUsingEncoding:NSUTF8StringEncoding]];
+	[postData appendData:[boundaryString dataUsingEncoding:NSUTF8StringEncoding]];
+
+	[postData appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", multipartName, filename] dataUsingEncoding:NSUTF8StringEncoding]];
 	NSString *mimeType = mimeTypeForExtension([filename pathExtension]);
 	[postData appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", mimeType] dataUsingEncoding:NSUTF8StringEncoding]];
 	NSData *photo = [NSData dataWithContentsOfFile:inPath];
-	[postData appendData:photo];    
-    [postData appendData:[boundaryStringFinal dataUsingEncoding:NSUTF8StringEncoding]];
-			
+	[postData appendData:photo];
+	[postData appendData:[boundaryStringFinal dataUsingEncoding:NSUTF8StringEncoding]];
+
 	NSString *tempContentType = [[_request.contentType copy] autorelease];
 	NSString *multiPartContentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
 	_request.contentType = multiPartContentType;
@@ -189,7 +195,7 @@ NSString *mimeTypeForExtension(NSString *ext)
 
 	BOOL result = [_request performMethod:LFHTTPRequestPOSTMethod onURL:requestURL withData:postData];
 	_request.contentType = tempContentType;
-	
+
 	return result;
 }
 
@@ -250,15 +256,15 @@ NSString *mimeTypeForExtension(NSString *ext)
 	if (delegate) [sessionInfo setObject:delegate forKey:@"delegate"];
 	if (arguments) [sessionInfo setObject:arguments forKey:@"arguments"];
 	if (userInfo) [sessionInfo setObject:userInfo forKey:@"userInfo"];
-	
+
 	if (![actionName isEqualToString:OPLoginAction]) {
 		if (_expirationDate && [_expirationDate compare:[NSDate date]] != NSOrderedDescending) {
 			[_request setSessionInfo:sessionInfo];
 			[self httpRequest:_request didFailWithError:@"Session expired."];
-		}		
-	}	
-	
-	
+		}
+	}
+
+
 	if (filepath) {
 		[_request cancelWithoutDelegateMessage];
 		[self uploadFile:filepath suggestedFilename:[filepath lastPathComponent] requestURL:URL multipartName:multipartName sessionInfo:sessionInfo];
@@ -288,7 +294,7 @@ NSString *mimeTypeForExtension(NSString *ext)
 	if (![cookie length]) {
 		return nil;
 	}
-	NSRange range = [cookie rangeOfString:@"expires="];		
+	NSRange range = [cookie rangeOfString:@"expires="];
 	NSUInteger dateStringStart = range.location;
 	if (dateStringStart == NSNotFound) {
 		return nil;
@@ -303,7 +309,7 @@ NSString *mimeTypeForExtension(NSString *ext)
 	[cookieExpireDateFormatter setDateFormat:@"EEE, dd-MMM-yyyy HH:mm:ss zzz"];
 	NSDate *date = [cookieExpireDateFormatter dateFromString:dateString];
 	[cookieExpireDateFormatter release];
-	
+
 	return date;
 }
 
@@ -332,7 +338,7 @@ NSString *mimeTypeForExtension(NSString *ext)
 	_expirationDate = [date retain];
 	[tmp release];
 	[[NSUserDefaults standardUserDefaults] setObject:cookie forKey:ObjectivePlurkCookiePreferenceName];
-	
+
 	NSDictionary *requestHeader = [NSDictionary dictionaryWithObjectsAndKeys:cookie, @"Cookie", nil];
 	_request.requestHeader = requestHeader;
 
@@ -342,7 +348,7 @@ NSString *mimeTypeForExtension(NSString *ext)
 		self.currentUserInfo = userInfo;
 		NSData *data = [NSKeyedArchiver archivedDataWithRootObject:userInfo];
 		[[NSUserDefaults standardUserDefaults] setValue:data forKey:ObjectivePlurkUserInfoPreferenceName];
-		
+
 	}
 
 	if ([delegate respondsToSelector:@selector(plurk:didLoggedIn:)]) {
@@ -917,6 +923,7 @@ NSString *mimeTypeForExtension(NSString *ext)
 	}
 	[self runQueue];
 }
+
 - (void)httpRequest:(LFHTTPRequest *)request sentBytes:(NSUInteger)bytesSent total:(NSUInteger)total
 {
 //	NSLog(@"bytesSent/total:%d/%d", bytesSent, total);
@@ -924,4 +931,3 @@ NSString *mimeTypeForExtension(NSString *ext)
 
 
 @end
-

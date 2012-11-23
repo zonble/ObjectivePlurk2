@@ -6,27 +6,33 @@
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are met:
+// modification, are permitted provided that the following conditions
+// are met:
 //
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of Weizhong Yang (zonble) nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-// 
+//	   * Redistributions of source code must retain the above
+//		 copyright notice, this list of conditions and the following
+//		 disclaimer.
+//	   * Redistributions in binary form must reproduce the above
+//		 copyright notice, this list of conditions and the following
+//		 disclaimer in the documentation and/or other materials
+//		 provided with the distribution.
+//	   * Neither the name of Weizhong Yang (zonble) nor the names of
+//		 its contributors may be used to endorse or promote products
+//		 derived from this software without specific prior written
+//		 permission.
+//
 // THIS SOFTWARE IS PROVIDED BY WEIZHONG YANG ''AS IS'' AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL WEIZHONG YANG BE LIABLE FOR ANY
-// DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+// PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL WEIZHONG YANG BE LIABLE
+// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+// OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+// BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+// LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+// USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+// DAMAGE.
 
 #import "ObjectivePlurk.h"
 #import "ObjectivePlurk+PrivateMethods.h"
@@ -77,9 +83,9 @@ static ObjectivePlurk *sharedInstance;
 		[_dateFormatter setDateFormat:@"yyyy-M-d'T'HH:mm:ss"];
 		_currentUserInfo = nil;
 		_qualifiers = [[NSArray alloc] initWithObjects:@"loves", @"likes", @"shares", @"gives", @"hates", @"wants", @"has", @"will", @"asks", @"wishes", @"was", @"feels", @"thinks", @"says", @"is", @":", @"freestyle", @"hopes", @"needs", @"wonders", nil];
-		
+
 #define U8(x) [NSString stringWithUTF8String:x]
-		
+
 		_langCodes = [[NSDictionary alloc] initWithObjectsAndKeys:U8("English"), @"en", U8("Portugu"), @"pt_BR", U8("中文 (中国)"), @"cn", U8("Català"), @"ca", U8("Ελληνικά"), @"el", U8("Dansk"), @"dk", U8("Deutsch"), @"de", U8("Español"), @"es", U8("Svenska"), @"sv", U8("Norsk bokmål"), @"nb", U8("Hindi"), @"hi", U8("Română"), @"ro", U8("Hrvatski"), @"hr", U8("Français"), @"fr", U8("Pусский"), @"ru", U8("Italiano"), @"it", U8("日本語"), @"ja", U8("עברית"), @"he", U8("Magyar"), @"hu", U8("Nederlands"), @"ne", U8("ไทย"), @"th", U8("Filipino"), @"ta_fp", U8("Bahasa Indonesia"), @"in", U8("Polski"), @"pl", U8("العربية"), @"ar", U8("Finnish"), @"fi", U8("中文 (繁體中文)"), @"tr_ch", U8("Türkçe"), @"tr", U8("Gaeilge"), @"ga", U8("Slovensk"), @"sk", U8("українська"), @"uk", U8("فارسی"), @"fa", nil];
 #undef U8
 		_receivedHeader = nil;
@@ -133,7 +139,7 @@ static ObjectivePlurk *sharedInstance;
 	}
 	if ([locale isEqualToString:@"ru"]) {
 		return @"ru";
-	}	
+	}
 	if ([locale isEqualToString:@"sv"]) {
 		return @"sv";
 	}
@@ -169,7 +175,7 @@ static ObjectivePlurk *sharedInstance;
 	}
 	if ([locale isEqualToString:@"th"]) {
 		return @"th";
-	}	
+	}
 //	if ([locale isEqualToString:@"cs"]) {
 //		return @"cs";
 //	}
@@ -196,7 +202,7 @@ static ObjectivePlurk *sharedInstance;
 	if (!delegate) {
 		return;
 	}
-	
+
 	NSEnumerator *enumerator = [_queue objectEnumerator];
 	id sessionInfo = nil;
 	while (sessionInfo = [enumerator nextObject]) {
@@ -224,7 +230,11 @@ static ObjectivePlurk *sharedInstance;
 }
 - (BOOL)resume
 {
-	NSString *cookie = [[NSUserDefaults standardUserDefaults] stringForKey:ObjectivePlurkCookiePreferenceName];
+	NSString *key = ObjectivePlurkCookiePreferenceName;
+	if ([_prefix length]) {
+		key = [NSString stringWithFormat:@"%@-%@", ObjectivePlurkCookiePreferenceName, _prefix];
+	}
+	NSString *cookie = [[NSUserDefaults standardUserDefaults] stringForKey:key];
 	if (!cookie) {
 		return NO;
 	}
@@ -235,14 +245,19 @@ static ObjectivePlurk *sharedInstance;
 	if ([date compare:[NSDate date]] != NSOrderedDescending) {
 		return NO;
 	}
-	
+
 	id tmp = _expirationDate;
 	_expirationDate = [date retain];
-	[tmp release];	
-	
+	[tmp release];
+
 	NSDictionary *requestHeader = [NSDictionary dictionaryWithObjectsAndKeys:cookie, @"Cookie", nil];
 	_request.requestHeader = requestHeader;
-	NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:ObjectivePlurkUserInfoPreferenceName];
+
+	key = ObjectivePlurkUserInfoPreferenceName;
+	if ([_prefix length]) {
+		key = [NSString stringWithFormat:@"%@-%@", ObjectivePlurkUserInfoPreferenceName, _prefix];
+	}
+	NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:key];
 	self.currentUserInfo  = [NSKeyedUnarchiver unarchiveObjectWithData:data];
 	return YES;
 }
@@ -255,7 +270,7 @@ static ObjectivePlurk *sharedInstance;
 	id tmp = _expirationDate;
 	_expirationDate = nil;
 	[tmp release];
-	
+
 	[[NSUserDefaults standardUserDefaults] removeObjectForKey:ObjectivePlurkCookiePreferenceName];
 	[[NSUserDefaults standardUserDefaults] removeObjectForKey:ObjectivePlurkUserInfoPreferenceName];
 }
@@ -273,7 +288,7 @@ static ObjectivePlurk *sharedInstance;
 				break;
 			case OPBigUserProfileImageSize:
 				return @"http://www.plurk.com/static/default_big.gif";
-				break;			
+				break;
 			default:
 				return nil;
 				break;
@@ -282,7 +297,7 @@ static ObjectivePlurk *sharedInstance;
 	if (!avatar) {
 		avatar = @"";
 	}
-	
+
 	switch (size) {
 		case OPSmallUserProfileImageSize:
 			return [NSString stringWithFormat:@"http://avatars.plurk.com/%d-small%@.gif", [identifier intValue], avatar];
@@ -292,7 +307,7 @@ static ObjectivePlurk *sharedInstance;
 			break;
 		case OPBigUserProfileImageSize:
 			return [NSString stringWithFormat:@"http://avatars.plurk.com/%d-big%@.jpg", [identifier intValue], avatar];
-			break;			
+			break;
 		default:
 			break;
 	}
@@ -317,7 +332,7 @@ static ObjectivePlurk *sharedInstance;
 
 - (void)updateProfileWithOldPassword:(NSString *)oldPassword fullname:(NSString *)fullname newPassword:(NSString *)newPassword email:(NSString *)email displayName:(NSString *)displayName privacy:(OPPrivacy)privacy dateOfBirth:(NSString *)dateOfBirth delegate:(id)delegate userInfo:(NSDictionary *)userInfo
 {
-	NSMutableDictionary *args = [NSMutableDictionary dictionary];	
+	NSMutableDictionary *args = [NSMutableDictionary dictionary];
 	NSAssert(oldPassword, @"oldPassword is required");
 	[args setObject:oldPassword forKey:@"current_password"];
 	if (fullname) {
@@ -344,11 +359,11 @@ static ObjectivePlurk *sharedInstance;
 			break;
 		case OPPrivacyOnlyMe:
 			[args setObject:@"only_me" forKey:@"privacy"];
-			break;			
+			break;
 		default:
 			break;
 	}
-	
+
 	[self addRequestWithAction:OPUpdateProfileAction arguments:args delegate:delegate userInfo:userInfo];
 }
 
@@ -357,7 +372,7 @@ static ObjectivePlurk *sharedInstance;
 - (void)fetchPollingMessagesWithDateOffset:(NSDate *)offsetDate delegate:(id)delegate userInfo:(NSDictionary *)userInfo
 {
 	NSAssert(offsetDate != nil, @"offsetDate is required");
-	
+
 	NSMutableDictionary *args = [NSMutableDictionary dictionary];
 	if (!offsetDate) {
 		offsetDate = [NSDate date];
@@ -374,7 +389,7 @@ static ObjectivePlurk *sharedInstance;
 	if ([identifer isKindOfClass:[NSNumber class]]) {
 		identifer = [(NSNumber *)identifer stringValue];
 	}
-	
+
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:identifer, @"plurk_id", nil];
 	[self addRequestWithAction:OPRetriveMessageAction arguments:args delegate:delegate userInfo:userInfo];
 }
@@ -402,7 +417,7 @@ static ObjectivePlurk *sharedInstance;
 		[args setObject:@"true" forKey:@"only_private"];
 	}
 	[self addRequestWithAction:OPRetriveMessagesAction arguments:args delegate:delegate userInfo:userInfo];
-	
+
 }
 
 - (void)fetchUnreadMessagesWithDateOffset:(NSDate *)offsetDate limit:(NSInteger)limit delegate:(id)delegate userInfo:(NSDictionary *)userInfo
@@ -438,11 +453,11 @@ static ObjectivePlurk *sharedInstance;
 
 - (void)addNewMessageWithContent:(NSString *)content qualifier:(NSString *)qualifier othersCanComment:(OPCanComment)canComment lang:(NSString *)lang limitToUsers:(NSArray *)users delegate:(id)delegate userInfo:(NSDictionary *)userInfo
 {
-	NSString *limitString = @"";
+	NSMutableDictionary *args = [NSMutableDictionary dictionaryWithObjectsAndKeys:content, @"content", qualifier, @"qualifier", [[NSNumber numberWithInt:canComment] stringValue], @"no_comments", lang, @"lang", nil];
 	if ([users count]) {
-		limitString = [users JSONRepresentation];
+		NSString *limitString = [users JSONRepresentation];
+		[args setObject:limitString forKey:@"limited_to"];
 	}
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:content, @"content", qualifier, @"qualifier", [[NSNumber numberWithInt:canComment] stringValue], @"no_comments", lang, @"lang", limitString, @"limited_to", nil];
 	[self addRequestWithAction:OPAddMessageAction arguments:args delegate:delegate userInfo:userInfo];
 }
 
@@ -456,18 +471,18 @@ static ObjectivePlurk *sharedInstance;
 	if ([identifer isKindOfClass:[NSNumber class]]) {
 		identifer = [(NSNumber *)identifer stringValue];
 	}
-	
+
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:identifer, @"plurk_id", nil];
-	[self addRequestWithAction:OPDeleteMessageAction arguments:args delegate:delegate userInfo:userInfo];	
+	[self addRequestWithAction:OPDeleteMessageAction arguments:args delegate:delegate userInfo:userInfo];
 }
 - (void)editMessageWithMessageIdentifier:(NSString *)identifer content:(NSString *)content delegate:(id)delegate userInfo:(NSDictionary *)userInfo
 {
 	if ([identifer isKindOfClass:[NSNumber class]]) {
 		identifer = [(NSNumber *)identifer stringValue];
 	}
-	
+
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:identifer, @"plurk_id", content, @"content", nil];
-	[self addRequestWithAction:OPEditMessageAction arguments:args delegate:delegate userInfo:userInfo];		
+	[self addRequestWithAction:OPEditMessageAction arguments:args delegate:delegate userInfo:userInfo];
 }
 
 #pragma mark Responses
@@ -477,7 +492,7 @@ static ObjectivePlurk *sharedInstance;
 	if ([identifer isKindOfClass:[NSNumber class]]) {
 		identifer = [(NSNumber *)identifer stringValue];
 	}
-	
+
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:identifer, @"plurk_id", nil];
 	[self addRequestWithAction:OPRetriveResponsesAction arguments:args delegate:delegate userInfo:userInfo];
 }
@@ -499,7 +514,7 @@ static ObjectivePlurk *sharedInstance;
 	}
 	NSAssert(identifer != nil, @"");
 	NSAssert(responseIdentifier != nil, @"");
-	
+
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:identifer, @"plurk_id", responseIdentifier, @"response_id", nil];
 	[self addRequestWithAction:OPDeleteResponsesAction arguments:args delegate:delegate userInfo:userInfo];
 }
@@ -516,9 +531,9 @@ static ObjectivePlurk *sharedInstance;
 	if ([userIdentifier isKindOfClass:[NSNumber class]]) {
 		userIdentifier = [(NSNumber *)userIdentifier stringValue];
 	}
-	
+
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:userIdentifier, @"user_id", nil];
-	[self addRequestWithAction:OPFetchPublicProfileAction arguments:args delegate:delegate userInfo:userInfo];	
+	[self addRequestWithAction:OPFetchPublicProfileAction arguments:args delegate:delegate userInfo:userInfo];
 }
 
 #pragma mark Friends and fans
@@ -531,7 +546,7 @@ static ObjectivePlurk *sharedInstance;
 	}
 	[args setObject:userIdentifier forKey:@"user_id"];
 	if (offset) {
-		[args setObject:[NSString stringWithFormat:@"%d", offset] forKey:@"offset"];
+		[args setObject:[NSString stringWithFormat:@"%ld", offset] forKey:@"offset"];
 	}
 	[self addRequestWithAction:OPRetriveFriendAction arguments:args delegate:delegate userInfo:userInfo];
 }
@@ -544,7 +559,7 @@ static ObjectivePlurk *sharedInstance;
 	}
 	[args setObject:userIdentifier forKey:@"user_id"];
 	if (offset) {
-		[args setObject:[NSString stringWithFormat:@"%d", offset] forKey:@"offset"];
+		[args setObject:[NSString stringWithFormat:@"%ld", offset] forKey:@"offset"];
 	}
 	[self addRequestWithAction:OPRetriveFansAction arguments:args delegate:delegate userInfo:userInfo];
 }
@@ -553,7 +568,7 @@ static ObjectivePlurk *sharedInstance;
 {
 	NSMutableDictionary *args = [NSMutableDictionary dictionary];
 	if (offset) {
-		[args setObject:[NSString stringWithFormat:@"%d", offset] forKey:@"offset"];
+		[args setObject:[NSString stringWithFormat:@"%ld", offset] forKey:@"offset"];
 	}
 	[self addRequestWithAction:OPRetriveFollowingAction arguments:args delegate:delegate userInfo:userInfo];
 }
@@ -564,7 +579,7 @@ static ObjectivePlurk *sharedInstance;
 		userIdentifier = [(NSNumber *)userIdentifier stringValue];
 	}
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:userIdentifier, @"friend_id", nil];
-	[self addRequestWithAction:OPBecomeFriendAction arguments:args delegate:delegate userInfo:userInfo];	
+	[self addRequestWithAction:OPBecomeFriendAction arguments:args delegate:delegate userInfo:userInfo];
 }
 
 - (void)removeFriendshipWithUser:(NSString *)userIdentifier delegate:(id)delegate userInfo:(NSDictionary *)userInfo
@@ -573,7 +588,7 @@ static ObjectivePlurk *sharedInstance;
 		userIdentifier = [(NSNumber *)userIdentifier stringValue];
 	}
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:userIdentifier, @"friend_id", nil];
-	[self addRequestWithAction:OPRemoveFriendshipAction arguments:args delegate:delegate userInfo:userInfo];	
+	[self addRequestWithAction:OPRemoveFriendshipAction arguments:args delegate:delegate userInfo:userInfo];
 }
 
 - (void)becomeFanOfUser:(NSString *)userIdentifier delegate:(id)delegate userInfo:(NSDictionary *)userInfo
@@ -593,7 +608,7 @@ static ObjectivePlurk *sharedInstance;
 	NSString *followString = follow ? @"true": @"false";
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:userIdentifier, @"user_id", followString, @"follow", nil];
 	[self addRequestWithAction:OPSetFollowingAction arguments:args delegate:delegate userInfo:userInfo];
-	
+
 }
 
 - (void)fetchFriendsCompletionList:(id)delegate userInfo:(NSDictionary *)userInfo
@@ -619,7 +634,7 @@ static ObjectivePlurk *sharedInstance;
 		userIdentifier = [(NSNumber *)userIdentifier stringValue];
 	}
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:userIdentifier, @"user_id", nil];
-	[self addRequestWithAction:OPAddAsFanAction arguments:args delegate:delegate userInfo:userInfo];	
+	[self addRequestWithAction:OPAddAsFanAction arguments:args delegate:delegate userInfo:userInfo];
 }
 
 - (void)addAllAsFanWithDelegate:(id)delegate userInfo:(NSDictionary *)userInfo
@@ -633,7 +648,7 @@ static ObjectivePlurk *sharedInstance;
 		userIdentifier = [(NSNumber *)userIdentifier stringValue];
 	}
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:userIdentifier, @"user_id", nil];
-	[self addRequestWithAction:OPAddAsFriendAction arguments:args delegate:delegate userInfo:userInfo];		
+	[self addRequestWithAction:OPAddAsFriendAction arguments:args delegate:delegate userInfo:userInfo];
 }
 
 - (void)addAllAsFriendWithDelegate:(id)delegate userInfo:(NSDictionary *)userInfo
@@ -647,7 +662,7 @@ static ObjectivePlurk *sharedInstance;
 		userIdentifier = [(NSNumber *)userIdentifier stringValue];
 	}
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:userIdentifier, @"user_id", nil];
-	[self addRequestWithAction:OPDenyFriendshipAction arguments:args delegate:delegate userInfo:userInfo];	
+	[self addRequestWithAction:OPDenyFriendshipAction arguments:args delegate:delegate userInfo:userInfo];
 }
 
 - (void)removeNotificationWithDelegate:(id)delegate userInfo:(NSDictionary *)userInfo
@@ -662,8 +677,8 @@ static ObjectivePlurk *sharedInstance;
 	NSMutableDictionary *args = [NSMutableDictionary dictionary];
 	[args setObject:query forKey:@"query"];
 	if (offset) {
-		[args setObject:[NSString stringWithFormat:@"%d", offset] forKey:@"offset"];
-	}	
+		[args setObject:[NSString stringWithFormat:@"%ld", offset] forKey:@"offset"];
+	}
 	[self addRequestWithAction:OPSearchMessagesAction arguments:nil delegate:delegate userInfo:userInfo];
 }
 
@@ -672,9 +687,9 @@ static ObjectivePlurk *sharedInstance;
 	NSMutableDictionary *args = [NSMutableDictionary dictionary];
 	[args setObject:query forKey:@"query"];
 	if (offset) {
-		[args setObject:[NSString stringWithFormat:@"%d", offset] forKey:@"offset"];
-	}	
-	[self addRequestWithAction:OPSearchUsersAction arguments:nil delegate:delegate userInfo:userInfo];	
+		[args setObject:[NSString stringWithFormat:@"%ld", offset] forKey:@"offset"];
+	}
+	[self addRequestWithAction:OPSearchUsersAction arguments:nil delegate:delegate userInfo:userInfo];
 }
 
 #pragma mark Emoticons
@@ -697,7 +712,7 @@ static ObjectivePlurk *sharedInstance;
 		userIdentifier = [(NSNumber *)userIdentifier stringValue];
 	}
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:userIdentifier, @"user_id", nil];
-	[self addRequestWithAction:OPBlockuUserAction arguments:args delegate:delegate userInfo:userInfo];		
+	[self addRequestWithAction:OPBlockuUserAction arguments:args delegate:delegate userInfo:userInfo];
 }
 
 - (void)unblockUser:(NSString *)userIdentifier delegate:(id)delegate userInfo:(NSDictionary *)userInfo
@@ -706,7 +721,7 @@ static ObjectivePlurk *sharedInstance;
 		userIdentifier = [(NSNumber *)userIdentifier stringValue];
 	}
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:userIdentifier, @"user_id", nil];
-	[self addRequestWithAction:OPUnblockuUserAction arguments:args delegate:delegate userInfo:userInfo];	
+	[self addRequestWithAction:OPUnblockuUserAction arguments:args delegate:delegate userInfo:userInfo];
 }
 
 #pragma mark Cliques
@@ -746,7 +761,7 @@ static ObjectivePlurk *sharedInstance;
 		userIdentifier = [(NSNumber *)userIdentifier stringValue];
 	}
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:userIdentifier, @"user_id", cliqueName, @"clique_name", nil];
-	[self addRequestWithAction:OPAddUserToCliqueAction arguments:args delegate:delegate userInfo:userInfo];	
+	[self addRequestWithAction:OPAddUserToCliqueAction arguments:args delegate:delegate userInfo:userInfo];
 }
 
 - (void)removeUser:(NSString *)userIdentifier fromClique:(NSString *)cliqueName delegate:(id)delegate userInfo:(NSDictionary *)userInfo
@@ -755,10 +770,28 @@ static ObjectivePlurk *sharedInstance;
 		userIdentifier = [(NSNumber *)userIdentifier stringValue];
 	}
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:userIdentifier, @"user_id", cliqueName, @"clique_name", nil];
-	[self addRequestWithAction:OPRemoveUserFromCliqueAction arguments:args delegate:delegate userInfo:userInfo];		
-	
+	[self addRequestWithAction:OPRemoveUserFromCliqueAction arguments:args delegate:delegate userInfo:userInfo];
+
 }
 
+#pragma mark Objective Plurk
+
+- (void)setPrefix:(NSString *)prefix
+{
+	id tmp = _prefix;
+	_prefix = [prefix retain];
+	[tmp release];
+
+	[_expirationDate release];
+	_expirationDate = nil;
+	_request.requestHeader = nil;
+	self.currentUserInfo  = nil;
+}
+
+- (NSString *)prefix
+{
+	return _prefix;
+}
 
 @synthesize APIKey;
 @synthesize qualifiers = _qualifiers;

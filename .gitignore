@@ -8,3 +8,6 @@ CommitVersion.xcconfig
 dsa_priv.pem
 *PlurkAPI.h*
 *PlurkAPIKey.h*
+*.perspectivev3
+*.xcworkspace
+xcuserdata

@@ -415,7 +415,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				PRODUCT_NAME = ObjectivePlurk;
-				SDKROOT = macosx10.5;
+				SDKROOT = "";
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Debug;
@@ -432,7 +432,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				PRODUCT_NAME = ObjectivePlurk;
-				SDKROOT = macosx10.5;
+				SDKROOT = "";
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Release;
@@ -486,6 +486,7 @@
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = ObjectivePlurkTest;
+				SDKROOT = macosx;
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
@@ -512,7 +513,7 @@
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = ObjectivePlurkTest;
-				SDKROOT = macosx10.5;
+				SDKROOT = macosx;
 				WRAPPER_EXTENSION = octest;
 				ZERO_LINK = NO;
 			};
